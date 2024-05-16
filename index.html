@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV</title>
+
+    <style>
+        html {
+            zoom: 101%;
+        }
+    </style>
+
+</head>
+
+<body>
+    <fieldset style="float:left; width:29%;">
+        <legend>WebScrappi</legend>
+        <div id="table-container1"></div>
+    </fieldset>
+
+    <fieldset style="float:right;">
+        <legend>AppInventor</legend>
+        <div id="table-container2"></div>
+    </fieldset>
+
+    <script>
+        function displayCSV(csv, containerId) {
+            var rows = csv.split("\n");
+            var tableHTML = "<table border='1'>";
+            rows.forEach(function (row) {
+                tableHTML += "<tr>";
+                var cells = row.split(",");
+                cells.forEach(function (cell) {
+                    tableHTML += "<td>" + cell + "</td>";
+                });
+                tableHTML += "</tr>";
+            });
+            tableHTML += "</table>";
+            document.getElementById(containerId).innerHTML = tableHTML;
+        }
+
+        function loadCSV(file, containerId) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        displayCSV(xhr.responseText, containerId);
+                    } else {
+                        console.error("Error al cargar el archivo CSV.");
+                    }
+                }
+            };
+            xhr.open("GET", file, true);
+            xhr.send();
+        }
+
+        window.onload = function () {
+            loadCSV("/seven.csv", "table-container1"); 
+            loadCSV("/respuestas.csv", "table-container2");
+        };
+    </script>
+</body>
+
+</html>
