@@ -8,36 +8,84 @@
 
     <style>
         html {
-            zoom: 101%;
+            zoom: 70%;
+        }
+
+        fieldset {
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            width: calc(50% - 10px);
+            box-sizing: border-box;
+        }
+
+        legend {
+            font-weight: bold;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* #table-container1 th { */
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
         }
     </style>
 
 </head>
 
-<body>
-    <fieldset style="float:left; width:29%;">
-        <legend>WebScrappi</legend>
+<body style="background-color: #333;">
+    <fieldset style="float:left; background-color: #ccc;">
+        <h3>WebScrappi</h3>
         <div id="table-container1"></div>
     </fieldset>
 
-    <fieldset style="float:right;">
-        <legend>AppInventor</legend>
+    <fieldset style="float:right; background-color: #ccc;">
+        <h3>AppInventor</h3>
         <div id="table-container2"></div>
     </fieldset>
 
     <script>
         function displayCSV(csv, containerId) {
             var rows = csv.split("\n");
-            var tableHTML = "<table border='1'>";
-            rows.forEach(function (row) {
-                tableHTML += "<tr>";
+            var tableHTML = "<table>";
+            rows.forEach(function (row, rowIndex) {
+                if (rowIndex === 0) {
+                    tableHTML += "<thead><tr>";
+                } else {
+                    tableHTML += "<tr>";
+                }
                 var cells = row.split(",");
                 cells.forEach(function (cell) {
-                    tableHTML += "<td>" + cell + "</td>";
+                    if (rowIndex === 0) {
+                        tableHTML += "<th>" + cell + "</th>";
+                    } else {
+                        tableHTML += "<td>" + cell + "</td>";
+                    }
                 });
-                tableHTML += "</tr>";
+                if (rowIndex === 0) {
+                    tableHTML += "</tr></thead><tbody>";
+                } else {
+                    tableHTML += "</tr>";
+                }
             });
-            tableHTML += "</table>";
+            tableHTML += "</tbody></table>";
             document.getElementById(containerId).innerHTML = tableHTML;
         }
 
@@ -57,7 +105,7 @@
         }
 
         window.onload = function () {
-            loadCSV("/seven.csv", "table-container1"); 
+            loadCSV("/seven.csv", "table-container1");
             loadCSV("/respuestas.csv", "table-container2");
         };
     </script>
