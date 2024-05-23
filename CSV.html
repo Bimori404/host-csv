@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Visor de Archivos CSV</title>
+
+    <style>
+        html {
+            zoom: 65%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        fieldset {
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            width: calc(50% - 10px);
+            box-sizing: border-box;
+        }
+
+        legend {
+            font-weight: bold;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* #table-container1 th { */
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+
+</head>
+
+<!-- <body style="background-color: #333;"> -->
+<body class="bg-gray-600">
+    <fieldset style="float:left; background-color: #ccc;">
+        <h3>WebScrappi</h3>
+        <div id="table-container1"></div>
+    </fieldset>
+
+    <fieldset style="float:right; background-color: #ccc;">
+        <h3>AppInventor</h3>
+        <div id="table-container2"></div>
+    </fieldset>
+
+    <script>
+        function displayCSV(csv, containerId) {
+            var rows = csv.split("\n");
+            var tableHTML = "<table>";
+            rows.forEach(function (row, rowIndex) {
+                if (rowIndex === 0) {
+                    tableHTML += "<thead><tr>";
+                } else {
+                    tableHTML += "<tr>";
+                }
+                var cells = row.split(",");
+                cells.forEach(function (cell) {
+                    if (rowIndex === 0) {
+                        tableHTML += "<th>" + cell + "</th>";
+                    } else {
+                        tableHTML += "<td>" + cell + "</td>";
+                    }
+                });
+                if (rowIndex === 0) {
+                    tableHTML += "</tr></thead><tbody>";
+                } else {
+                    tableHTML += "</tr>";
+                }
+            });
+            tableHTML += "</tbody></table>";
+            document.getElementById(containerId).innerHTML = tableHTML;
+        }
+
+        function loadCSV(file, containerId) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        displayCSV(xhr.responseText, containerId);
+                    } else {
+                        console.error("Error al cargar el archivo CSV.");
+                    }
+                }
+            };
+            xhr.open("GET", file, true);
+            xhr.send();
+        }
+
+        window.onload = function () {
+            loadCSV("/seven.csv", "table-container1");
+            loadCSV("/respuestas.csv", "table-container2");
+        };
+    </script>
+</body>
+
+</html>

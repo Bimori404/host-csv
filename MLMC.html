@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparación de Modelos de Aprendizaje Automático</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <div class="bg-gray-300 my-4 mx-4 rounded">
+        <!--  -->
+        <div class="container mx-auto py-4">
+            <h1 class="text-2xl font-bold">Comparación de Modelos de Aprendizaje Automático</h1>
+        </div>
+        <!--  -->
+        <div class="container mx-auto">
+            <label for="data" class="block mb-2">Subir archivo de datos:</label>
+            <input type="file" id="data" accept=".csv" class="mb-4">
+            <br>
+            <button onclick="trainAndCompareModels()"
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-3">Entrenar y Comparar
+                Modelos</button>
+        </div>
+        <!--  -->
+        <div class="container mx-auto py-4">
+            <div id="results"></div>
+            <div id="dataContainer" class="mt-2 bg-gray-400"></div>
+        </div>
+        <!--  -->
+    </div>
+    <script>
+        // Esta función carga y procesa el archivo CSV
+        function parseCSV(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const lines = reader.result.split('\n');
+                    const data = lines.map(line => line.split(','));
+                    resolve(data);
+                };
+                reader.onerror = reject;
+                reader.readAsText(file);
+            });
+        }
+
+        async function trainAndCompareModels() {
+            const fileInput = document.getElementById('data');
+            const file = fileInput.files[0];
+
+            try {
+                const data = await parseCSV(file);
+                // Aquí tienes los datos del CSV, ahora puedes proceder con la clasificación o agrupación
+                console.log(data);
+
+                // Muestra los datos en una tabla en el HTML
+                displayData(data);
+
+                // Ejemplo de clasificación o agrupación de datos
+                // Aquí puedes usar bibliotecas como TensorFlow.js, Brain.js, o cualquier otra
+                // Por ejemplo, si quisieras usar K-means clustering con una biblioteca como ml-kmeans:
+                // const kmeans = new KMeans();
+                // const clusters = kmeans.fit(data, { k: 3 }); // K=3 para 3 clusters
+                // console.log(clusters);
+
+                // O si quisieras entrenar un modelo de clasificación con TensorFlow.js, podrías hacerlo aquí
+
+                // Aquí podrías mostrar los resultados de la comparación de modelos en el contenedor 'results'
+                // Genera valores aleatorios para la precisión de los modelos
+                const accuracyModel1 = Math.floor(Math.random() * 101); // Valor entre 0 y 100
+                const accuracyModel2 = Math.floor(Math.random() * 101); // Valor entre 0 y 100
+
+                // Muestra los resultados de la comparación de modelos en el contenedor 'results'
+                const resultsContainer = document.getElementById('results');
+                resultsContainer.innerHTML = `<p class="mb-2">Resultados de la comparación de modelos:</p><p class="mb-1">Modelo 1: Precisión - ${accuracyModel1}%</p><p>Modelo 2: Precisión - ${accuracyModel2}%</p>`;
+
+
+            } catch (error) {
+                console.error('Error parsing CSV:', error);
+            }
+        }
+
+        function displayData(data) {
+            const dataContainer = document.getElementById('dataContainer');
+            const table = document.createElement('table');
+            table.classList.add('table-auto', 'w-full', 'mb-4');
+
+            // Crea la cabecera de la tabla
+            const headerRow = document.createElement('tr');
+            data[0].forEach(column => {
+                const th = document.createElement('th');
+                th.textContent = column;
+                th.classList.add('border', 'px-4', 'py-2');
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            // Crea las filas de datos
+            for (let i = 1; i < data.length; i++) {
+                const rowData = data[i];
+                const row = document.createElement('tr');
+                rowData.forEach(cell => {
+                    const td = document.createElement('td');
+                    td.textContent = cell;
+                    td.classList.add('border', 'px-4', 'py-2');
+                    row.appendChild(td);
+                });
+                table.appendChild(row);
+            }
+
+            // Agrega la tabla al contenedor en el HTML
+            dataContainer.innerHTML = '';
+            dataContainer.appendChild(table);
+        }
+    </script>
+</body>
+
+</html>
